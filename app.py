@@ -1,14 +1,15 @@
-from flask import Flask, request, Response, render_template
+from flask import Flask, request, render_template, Response
+from feature_extraction_function import main
+import numpy as np
 import pickle
+import validators
 
 
 app = Flask(__name__)
-# read our pickle file and label our logisticmodel as model
-phish_model_ls = pickle.load(open('random_forest_model_complete_colab.pkl', 'rb'))
+# read our pickle file and label our XGBClassifier as model
+XGBClassifier = pickle.load(open('XGBClassifier.pkl', 'rb'))
 
-urlError = {
-    "Please enter url field"
-}
+urlError = {"Please enter url field"}
 
 
 @app.route('/')
@@ -18,30 +19,23 @@ def home():
 
 @app.route('/predict',  methods=['POST'])
 def predict():
-
-    X_predict = []
-
     url = request.form.get("EnterYourSite")
-    print(url, "0000000000000000000000")
-    if url:
-        X_predict.append(str(url))
-        y_Predict = ''.join(phish_model_ls.predict(X_predict))
-        print(y_Predict)
-        if y_Predict == 'bad':
-            result = "This is a Phishing Site"
+    features_test = main(url)
+    # Due to updates to scikit-learn, we now need a 2D array as a parameter to the predict function.
+    features_test = np.array(features_test).reshape((1, -1))
+    prediction = XGBClassifier.predict(features_test)
+    if validators.url(url):
+        if prediction[0] == 0:
+            if "@" in url:
+                result = "Provided URL is might be Phishing URL and unsafe to use"
+            else:
+                result = "Provided URL is Safe to use"
         else:
-            result = "This is not a Phishing Site"
-
-        return render_template('index.html', prediction_text = result)
-
-    elif not url:
-        return Response(
-            response=urlError,
-            status=400
-        )
+            result = "Provided URL is might be Phishing URL and unsafe to use"
+        return render_template('index.html', prediction_text=result)
+    else:
+        return render_template('index.html', prediction_text="Provided URL is might be Phishing URL and unsafe to use")
 
 
 if __name__ == '__main__':
-
     app.run(debug=True, port=5000, threaded=True)
-    #app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
