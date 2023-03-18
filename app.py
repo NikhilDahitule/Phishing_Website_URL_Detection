@@ -3,12 +3,12 @@ from feature_extraction_function import main
 import numpy as np
 import pickle
 import validators
+import platform
 
 
 app = Flask(__name__)
 # read our pickle file and label our XGBClassifier as model
-XGBClassifier = pickle.load(open('XGBClassifier.pkl', 'rb'))
-
+XGBClassifier = pickle.load(open('XGBClassifier_Final.pkl', 'rb'))
 urlError = {"Please enter url field"}
 
 
@@ -38,4 +38,5 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000, threaded=True)
+    app.run()
+    #app.run(debug=True, port=5000, threaded=True)
