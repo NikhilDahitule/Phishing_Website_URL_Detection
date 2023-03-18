@@ -1,10 +1,8 @@
-from flask import Flask, request, render_template, Response
+from flask import Flask, request, render_template
 from feature_extraction_function import main
 import numpy as np
 import pickle
 import validators
-import platform
-
 
 app = Flask(__name__)
 # read our pickle file and label our XGBClassifier as model
