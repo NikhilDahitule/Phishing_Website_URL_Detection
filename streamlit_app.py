@@ -6,7 +6,7 @@ from feature_extraction_function import main
 
 
 # load the XGBoost model
-XGBClassifier = pickle.load(open('XGBClassifier_Final.pkl', 'rb'))
+XGBClassifier1 = pickle.load(open('XGBClassifier_Final.pkl', 'rb'))
 
 # Define the Streamlit app
 def app():
@@ -22,7 +22,7 @@ def app():
         # Run the model on the input URL
         features_test = main(url)
         features_test = np.array(features_test).reshape((1, -1))
-        prediction = XGBClassifier.predict(features_test)
+        prediction = XGBClassifier1.predict(features_test)
 
         # Check if the URL is valid and show the appropriate result
         if validators.url(url):
