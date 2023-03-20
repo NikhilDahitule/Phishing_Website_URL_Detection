@@ -2,7 +2,6 @@ import streamlit as st
 import validators
 import numpy as np
 import pickle
-import xgboost as xgb
 from feature_extraction_function import main
 
 
