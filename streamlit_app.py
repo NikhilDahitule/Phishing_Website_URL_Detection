@@ -1,5 +1,6 @@
 import streamlit as st
 import validators
+import sklearn
 import numpy as np
 import pickle
 import xgboost as xgb
