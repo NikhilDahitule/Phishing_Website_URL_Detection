@@ -5,9 +5,11 @@ import pickle
 import xgboost as xgb
 from feature_extraction_function import main
 
-
-# load the XGBoost model
-XGBClassifier1 = pickle.load(open('XGBClassifier_Final.pkl', 'rb'))
+# Load the XGBoost model using the save_model method to ensure compatibility with newer versions
+booster = xgb.Booster()
+booster.load_model('XGBClassifier_Final.model')
+XGBClassifier1 = xgb.XGBClassifier()
+XGBClassifier1._Booster = booster
 
 # Define the Streamlit app
 def app():
